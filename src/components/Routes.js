@@ -3,6 +3,7 @@ import {Route, Switch} from 'react-router-dom'
 import {withLocalize} from 'react-localize-redux'
 import LanguageToggle from './common/LanguageToggle'
 import {reducerLangState} from '../reducer/languages'
+import {getLocalStorage} from '../helpers'
 import CountryCodeList from './Filters/CountryCode'
 import Country from './Country'
 import Countries from './Countries'
@@ -12,7 +13,7 @@ import {Main} from './css'
 class Routes extends Component {
     constructor(props) {
         super(props);
-        const activeStorageLang = JSON.parse(localStorage.getItem('lang'));
+        const activeStorageLang = getLocalStorage('lang');
         localStorage.removeItem('request');
 
         if (activeStorageLang) {

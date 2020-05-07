@@ -29,8 +29,8 @@ class Input extends Component {
         const {country, inputFiltratedByName, getEntitiesInLocalStorage} = this.props;
         const str = e.target.value;
 
-        const request = getRequestInLocalStorage(str, country.type);
-        if (request && request.q === str)
+        const request = getRequestInLocalStorage(str.toLowerCase(), country.type);
+        if (request && request.q === str.toLowerCase())
             getEntitiesInLocalStorage(request.entities);
         else if (typeof country.dispatch === "function")
             country.dispatch(str);

@@ -10,8 +10,8 @@ export function extendsItemInCountries(countries, type) {
 }
 
 export function setRequestInLocalStorage(entities, type, response) {
-    const q = defaultFilters.countryName;
-    let request = JSON.parse(localStorage.getItem('request')) || [];
+    const q = defaultFilters.countryName.toLowerCase();
+    let request = getLocalStorage('request') || [];
 
     if (request.length === 0) {
         request = setInitialRequest(type, response);
@@ -38,7 +38,7 @@ export function setRequestInLocalStorage(entities, type, response) {
 }
 
 export function setInitialRequest(type, response) {
-    const q = defaultFilters.countryName;
+    const q = defaultFilters.countryName.toLowerCase();
     let request = {};
     if (q && type && response) {
         request.q = q;
@@ -53,8 +53,12 @@ function setLocalStorage(request) {
     localStorage.setItem('request', JSON.stringify(request));
 }
 
+export function getLocalStorage(key) {
+    return JSON.parse(localStorage.getItem(key));
+}
+
 export function getRequestInLocalStorage(q, type = 'LOAD_COUNTRY_BY_NAME_SUCCESS') {
-    const request = JSON.parse(localStorage.getItem('request'));
+    const request = getLocalStorage('request');
 
     if (request && request.length)
         return request.find(i => i.q === q && i.type === type);
@@ -76,7 +80,7 @@ export function pushItemInCountries(countries, response, type) {
 }
 
 export function removeItemInLocalStorage(type) {
-    const request = JSON.parse(localStorage.getItem('request'));
+    const request = getLocalStorage('request');
     const q = defaultFilters.countryName;
     const idx = request.findIndex(
         i => i.q === q && i.type === type
@@ -113,7 +117,7 @@ export function replaceLanguageStorage(stateLanguages, localStorageLang) {
 }
 
 export function getActiveLanguageInLocalStorage() {
-    const activeStorageLang = JSON.parse(localStorage.getItem('lang'));
+    const activeStorageLang = getLocalStorage('lang');
 
     if (activeStorageLang)
         return activeStorageLang.find(i => i.active);

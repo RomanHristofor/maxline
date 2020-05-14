@@ -11,21 +11,35 @@ import {
     changeCountryChecked
 } from '../../AC'
 import {getRequestInLocalStorage} from '../../helpers'
-import {
-    countryNameSelector,
-    countrySelector,
-    filtratedCountriesSelector,
-    loadingSelector
-} from "../../selectors"
+import {countryNameSelector, countrySelector, RootState} from "../../selectors"
+import {CountryType} from "../../reducer/countries"
 import {InputLabel, RadioGroup} from '../css'
 
-class Input extends Component {
+
+type Props = {
+    country: CountryType,
+    countryName: string,
+    loadCountryByShortName?: (s: string) => void,
+    loadCountryByFullName?: (s: string) => void,
+    loadCountryByCode?: (s: string) => void,
+    loadCountryByCurrency?: (s: string) => void,
+    inputFiltratedByName: (v: string) => void,
+    changeCountryChecked: (country: CountryType) => void,
+    getEntitiesInLocalStorage: (entities: CountryType[]) => void,
+}
+
+type State = {
+    dispatch?: (s: string) => void
+}
+
+class Input extends Component<Props & State> {
 
     state = {
         dispatch: this.props.loadCountryByShortName
     }
 
-    handleLoadCountry = (e) => {
+    handleLoadCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {dispatch} = this.state;
         const {country, inputFiltratedByName, getEntitiesInLocalStorage} = this.props;
         const str = e.target.value;
 
@@ -34,12 +48,13 @@ class Input extends Component {
             getEntitiesInLocalStorage(request.entities);
         else if (typeof country.dispatch === "function")
             country.dispatch(str);
-        else
-            this.state.dispatch(str);
+        else {
+            if (dispatch) dispatch(str);
+        }
         inputFiltratedByName(str);
     }
 
-    handleFilter = (key, country) => {
+    handleFilter = (key: string, country: CountryType) => {
         let dispatch;
         const {loadCountryByShortName, loadCountryByFullName,
             loadCountryByCode, loadCountryByCurrency, changeCountryChecked
@@ -120,11 +135,9 @@ class Input extends Component {
 
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
     countryName: countryNameSelector(state),
     country: countrySelector(state),
-    countries: filtratedCountriesSelector(state),
-    loading: loadingSelector(state),
 }), {
     loadCountryByShortName,
     loadCountryByFullName,

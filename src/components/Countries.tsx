@@ -1,18 +1,27 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {NavLink} from 'react-router-dom'
-import {withLocalize, Translate} from 'react-localize-redux'
+import {withLocalize, Translate, LocalizeContextProps} from 'react-localize-redux'
 import { addTranslationsForActiveLanguage, getActiveLanguageInLocalStorage } from '../helpers'
 import Input from './Filters/Input'
 import Pagination from './Filters/Pagination'
 import Loader from './common/Loader'
 import NotFound from './common/NotFound'
-import {filtratedCountriesSelector, loadingSelector} from '../selectors'
+import {filtratedCountriesSelector, loadingSelector, RootState} from '../selectors'
+import {CountryType} from "../reducer/countries";
+import {LangInterface} from "../reducer/languages";
 import {Title, Link, CountryInfo} from './css'
 
 
 
-class Countries extends Component {
+type Props = {
+    countries: CountryType[],
+    loading?: boolean,
+    activeLanguage?: LangInterface,
+    setActiveLanguage?: (c: string) => void,
+}
+
+class Countries extends Component<Props & LocalizeContextProps> {
 
     componentDidMount() {
         const {setActiveLanguage, addTranslationForLanguage} = this.props;
@@ -39,7 +48,6 @@ class Countries extends Component {
         const {loading, countries} = this.props;
         const loader = loading && <Loader/>;
         const notFount = countries.length === 0 ? <NotFound/> : null;
-
         const countryDetails = countries.map(country =>
             <div key={country.id}>
                 <CountryInfo display={country.name}>
@@ -82,7 +90,7 @@ class Countries extends Component {
     }
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
     countries: filtratedCountriesSelector(state),
     loading: loadingSelector(state),
 }))(withLocalize(Countries))

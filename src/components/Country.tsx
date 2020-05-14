@@ -1,14 +1,24 @@
 import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
-import {withLocalize, Translate} from 'react-localize-redux'
+import {withLocalize, Translate, LocalizeContextProps} from 'react-localize-redux'
 import {addTranslationsForActiveLanguage, getActiveLanguageInLocalStorage} from '../helpers'
 import {ListWrap, CountryInfo, CountryFlag} from './css'
+import {RootState} from '../selectors'
+import {LangInterface} from "../reducer/languages"
+import {CountryType} from "../reducer/countries"
 
 
-class Country extends Component {
+type Props = {
+    id: string,
+    country?: CountryType,
+    activeLanguage?: LangInterface,
+    setActiveLanguage?: (c: string) => void,
+}
 
-    componentDidUpdate(prevProps) {
+class Country extends Component<Props & LocalizeContextProps> {
+
+    componentDidUpdate(prevProps: any) {
         const {activeLanguage, setActiveLanguage, addTranslationForLanguage} = this.props;
         const activeLang = getActiveLanguageInLocalStorage();
 
@@ -33,7 +43,13 @@ class Country extends Component {
 
     getBody() {
         const {country} = this.props;
-
+        if (!country) return null;
+        const timezones = country.timezones && country.timezones[0];
+        const borders = country.borders && country.borders[0];
+        const currencies = country.currencies && country.currencies[0];
+        const languages = country.languages && country.languages[0];
+        const translations = country.translations ? Object.entries(country.translations) : [];
+        const regionalBlocs = country.regionalBlocs && country.regionalBlocs[0];
         return (
             <section>
                 <h2>
@@ -83,35 +99,35 @@ class Country extends Component {
                     <Translate id={`country.numericCode`}/>
                     <b>{country.numericCode}</b>
                 </CountryInfo>
-                <CountryInfo display={country.timezones[0]}>
+                <CountryInfo display={timezones}>
                     <Translate id={`country.timezones`}/>
-                    {country.timezones.map((time, i) => (<b key={i}>{time}</b>))}
+                    {Array.isArray(timezones) && timezones.map((time, i) => (<b key={i}>{time}</b>))}
                 </CountryInfo>
-                <CountryInfo display={country.borders[0]}>
+                <CountryInfo display={borders}>
                     <Translate id={`country.borders`}/>
-                    {country.borders.map((border, i) => (<b key={i}>{border},</b>))}
+                    {Array.isArray(borders) && borders.map((border, i) => (<b key={i}>{border},</b>))}
                 </CountryInfo>
-                <CountryInfo display={country.currencies[0]}>
+                <CountryInfo display={currencies}>
                     <Translate id={`country.currencies`}/>
-                    {country.currencies.map((currency, i) => (
+                    {Array.isArray(currencies) && currencies.map((currency, i) => (
                         <b key={i}>{currency.code}, {currency.name}, {currency.symbol}</b>
                     ))}
                 </CountryInfo>
-                <CountryInfo display={country.languages[0]}>
+                <CountryInfo display={languages}>
                     <Translate id={`country.languages`}/>
-                    {country.languages.map((lang, i) => (
+                    {Array.isArray(languages) && languages.map((lang, i) => (
                         <b key={i}>{lang.name}, {lang.nativeName}</b>
                     ))}
                 </CountryInfo>
-                <CountryInfo display={Object.entries(country.translations).length}>
+                <CountryInfo display={translations}>
                     <Translate id={`country.translations`}/>
-                    {Object.entries(country.translations).map(([k, v]) => (
+                    {translations.map(([k, v]) => (
                         <Fragment key={k}><b>{k}: </b> {v}, </Fragment>
                     ))}
                 </CountryInfo>
-                <CountryInfo display={country.regionalBlocs[0]}>
+                <CountryInfo display={regionalBlocs}>
                     <Translate id={`country.regionalBlocs`}/>
-                    {country.regionalBlocs.map((regional, i) => (
+                    {Array.isArray(regionalBlocs) && regionalBlocs.map((regional, i) => (
                         <b key={i}>{regional.name}, </b>
                     ))}
                 </CountryInfo>
@@ -124,6 +140,6 @@ class Country extends Component {
     }
 }
 
-export default connect((state, ownProps) => ({
-    country: state.countries.countries.find(c => c.id === ownProps.id),
+export default connect((state: RootState, ownProps: Props) => ({
+    country: state.countries.countries.find((c: CountryType) => c.id === ownProps.id),
 }))(withLocalize(Country))

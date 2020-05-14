@@ -1,5 +1,13 @@
 import styled, {css} from 'styled-components';
 
+type Link = {
+    primary: boolean
+}
+
+type Types = {
+    display: any
+}
+
 const Wrap = styled.div`
     margin-top: 50px;
     margin-left: 50px;
@@ -11,7 +19,7 @@ const Wrap = styled.div`
 const Title = styled.h2`
     color: #FF6347;
     margin-bottom: 20px;
-    ${(props) => props.primary && css`
+    ${(props: Link) => props.primary && css`
         color: palevioletred;
     `}
 `
@@ -64,7 +72,7 @@ const ListWrap = styled.div`
 
 const CountryInfo = styled.div`
     margin-bottom: 5px;
-    ${(props) => !props.display && css`
+    ${(props: Types) => !props.display && css`
         display: none;
     `}
 `

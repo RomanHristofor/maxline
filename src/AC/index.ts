@@ -10,23 +10,27 @@ import {
     HOST,
     GET_ENTITIES_IN_STORAGE
 } from '../constants'
+import {ActionType} from '../reducer/filters'
+import {LangInterface} from '../reducer/languages'
+import {CountryType} from '../reducer/countries'
 
 
-export function loadCountryByShortName(str) {
+
+export function loadCountryByShortName(str: string) {
     return {
         type: LOAD_COUNTRY_BY_NAME,
         callAPI: `${HOST}name/${str}`
     }
 }
 
-export function loadCountryByFullName(str) {
+export function loadCountryByFullName(str: string) {
     return {
         type: LOAD_COUNTRY_BY_FULL_NAME,
         callAPI: `${HOST}name/${str}?fullText=true`
     }
 }
 
-export function loadCountryByCode(str) {
+export function loadCountryByCode(str: string) {
     return {
         type: LOAD_COUNTRY_BY_CODE,
         payload: true,
@@ -34,7 +38,7 @@ export function loadCountryByCode(str) {
     }
 }
 
-export function loadCountryByCurrency(str) {
+export function loadCountryByCurrency(str: string) {
     return {
         type: LOAD_COUNTRY_BY_CURRENCY,
         payload: true,
@@ -42,35 +46,35 @@ export function loadCountryByCurrency(str) {
     }
 }
 
-export function inputFiltratedByName(str) {
+export function inputFiltratedByName(value: string) {
     return {
         type: INPUT_COUNTRY_NAME,
-        payload: str,
+        payload: value
     }
 }
 
-export function changePages(page) {
+export function changePages(payload: ActionType) {
     return {
         type: CHANGE_PAGES,
-        payload: page
+        payload
     }
 }
 
-export function changeCountryChecked(country) {
+export function changeCountryChecked(country: CountryType) {
     return {
         type: CHANGE_COUNTRY_CHECKED,
         payload: country
     }
 }
 
-export function changeLanguageStorage(lang) {
+export function changeLanguageStorage(lang: LangInterface) {
     return {
         type: CHANGE_LANGUAGES_STORAGE,
         payload: lang
     }
 }
 
-export function getEntitiesInLocalStorage(entities) {
+export function getEntitiesInLocalStorage(entities: CountryType[]) {
     return {
         type: GET_ENTITIES_IN_STORAGE,
         payload: entities

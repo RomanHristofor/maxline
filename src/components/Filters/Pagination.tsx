@@ -3,11 +3,19 @@ import Pagination from 'react-js-pagination'
 import {connect} from 'react-redux'
 import {changePages} from '../../AC'
 import {isIncludedSubstring} from '../../helpers'
-import {countriesSelector, countryNameSelector, errorSelector} from '../../selectors'
+import {RootState, countriesSelector, countryNameSelector, errorSelector} from '../../selectors'
+import {CountryType} from '../../reducer/countries'
+import {StateFiltersInterface} from '../../reducer/filters'
 
-class PaginationFilter extends Component {
+type Props = {
+    countries: CountryType[]
+    changePages: Function
+    error: string
+} & StateFiltersInterface
 
-    handlePageChange = (page) => {
+class PaginationFilter extends Component<Props> {
+
+    handlePageChange = (page: number) => {
         const {changePages, pagination} = this.props;
         changePages({
             page: page,
@@ -21,8 +29,10 @@ class PaginationFilter extends Component {
         let countFiltratedByName = 0;
 
         if (countryName) {
-            countFiltratedByName = countries.filter(item => {
-                return isIncludedSubstring(item.name, countryName)
+            countFiltratedByName = countries.filter((item: CountryType) => {
+                if (item.name)
+                    return isIncludedSubstring(item.name, countryName);
+                return item;
             }).length;
         }
 
@@ -41,7 +51,7 @@ class PaginationFilter extends Component {
     }
 }
 
-export default connect(state => ({
+export default connect((state: RootState) => ({
     countries: countriesSelector(state),
     countryName: countryNameSelector(state),
     pagination: state.filters.pagination,

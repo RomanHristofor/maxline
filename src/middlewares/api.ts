@@ -1,7 +1,14 @@
+import { Dispatch, Middleware, AnyAction } from 'redux'
 import {START, SUCCESS, FAIL} from '../constants'
 
 
-export const api = store => next => (action) => {
+export interface Action {
+    type: string
+    callAPI?: string
+}
+
+export const api: Middleware<Dispatch> = store => next =>
+    (action: Action | AnyAction) => {
 
     const {callAPI, type, ...rest} = action;
     if (!callAPI) return next(action);

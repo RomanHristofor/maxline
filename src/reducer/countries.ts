@@ -12,6 +12,48 @@ import {
 } from '../constants'
 
 
+export type StateCountryInterface = typeof reducerState;
+
+export type CountryType = {
+    id?: string
+    type?: string
+    dispatch?: (s: string) => void
+    isChecked?: 'shortName' | string
+    name?: string
+    capital?: string
+    flag?: string
+    region?: string
+    subregion?: string
+    demonym?: string
+    nativeName?: string
+    numericCode?: string
+    cioc?: string
+    population?: number
+    area?: number
+    gini?: number
+    timezones?: string[]
+    borders?: string[]
+    currencies?: object[]
+    languages?: object[]
+    translations?: object
+    regionalBlocs?: object[]
+}
+
+export type ResponseType = {
+    status: number,
+    message: string
+} & CountryType[]
+
+export type ActionType = {
+    type: string
+    response: ResponseType
+    payload: {
+        type: string
+        isChecked: string
+        dispatch: () => void
+    }
+}
+
 export const reducerState = {
     loading: false,
     loaded: false,
@@ -23,9 +65,9 @@ export const reducerState = {
 }
 
 
-
-export default (state = reducerState, action) => {
+export default (state = reducerState, action: ActionType) => {
     const {type, response, payload} = action;
+
     switch (type) {
         case LOAD_COUNTRY_BY_NAME + START:
         case LOAD_COUNTRY_BY_FULL_NAME + START:

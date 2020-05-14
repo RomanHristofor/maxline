@@ -1,12 +1,23 @@
 import {replaceLanguageStorage} from '../helpers';
-import {renderToStaticMarkup} from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 import globalTranslations from '../components/translations/global.json';
-import {
-    CHANGE_LANGUAGES_STORAGE,
-} from '../constants'
+import {CHANGE_LANGUAGES_STORAGE} from '../constants'
 
 
-export const reducerLangState = {
+export type LangInterface = {
+    name: string
+    code: string
+    active?: boolean
+}
+
+export type ActionType = {
+    type: string
+    payload: LangInterface & LangInterface[]
+}
+
+export type LanguagesInterface = typeof reducerState
+
+export const reducerState = {
     languages: [
         {name: 'EN', code: 'en', active: true},
         {name: 'RU', code: 'ru'},
@@ -16,7 +27,7 @@ export const reducerLangState = {
 }
 
 
-export default (state = reducerLangState, action) => {
+export default (state = reducerState, action: ActionType) => {
     const {type, payload} = action;
 
     switch (type) {

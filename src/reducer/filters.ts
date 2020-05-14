@@ -7,18 +7,26 @@ export const defaultFilters = {
     countryName: '',
     pagination: {
         page: 1,
-        pageSize: 10,
+        pageSize: 5,
     },
 };
+export type StateFiltersInterface = typeof defaultFilters;
 
+export type ActionType = {
+    type: string
+    payload: {
+        value: string
+        page: number
+    } & string
+}
 
-export default (state = defaultFilters, action) => {
+export default (state = defaultFilters, action: ActionType) => {
     const {type, payload} = action;
 
     switch (type) {
         case INPUT_COUNTRY_NAME:
             defaultFilters.countryName = payload;
-            return {...state, ...defaultFilters}
+            return {...state, ...defaultFilters};
 
         case CHANGE_PAGES:
             return {...state, pagination: payload};

@@ -1,32 +1,42 @@
 import React, {Component} from 'react'
-import {Route, Switch} from 'react-router-dom'
-import {withLocalize} from 'react-localize-redux'
+import {Route, Switch, RouteComponentProps} from 'react-router-dom'
 import LanguageToggle from './common/LanguageToggle'
-import {reducerLangState} from '../reducer/languages'
-import {getLocalStorage} from '../helpers'
+import { withLocalize, LocalizeContextProps } from 'react-localize-redux'
 import CountryCodeList from './Filters/CountryCode'
+import {getLocalStorage} from '../helpers'
+import {reducerState, LanguagesInterface} from '../reducer/languages'
 import Country from './Country'
 import Countries from './Countries'
 import {Main} from './css'
 
 
-class Routes extends Component {
-    constructor(props) {
+interface RouterProps {
+    id: string
+}
+
+type Props = {
+    reducerState: LanguagesInterface
+}
+
+class Routes extends Component<Props & LocalizeContextProps> {
+    constructor(props: any) {
         super(props);
         const activeStorageLang = getLocalStorage('lang');
         localStorage.removeItem('request');
 
-        if (activeStorageLang) {
-            reducerLangState.languages = activeStorageLang;
-            this.props.initialize(reducerLangState);
+        if (activeStorageLang.length) {
+            reducerState.languages = activeStorageLang;
+            this.props.initialize(reducerState);
         } else {
-            this.props.initialize(reducerLangState);
+            this.props.initialize(reducerState);
         }
     }
 
-    getIndex = ({match}) => {
+    getIndex = ({match}: RouteComponentProps<RouterProps>) => {
         const {id} = match.params;
-        return <Country id={id} key={id}/>
+        return <Country
+            id={id} key={id}
+        />
     };
 
     countries = () => <Countries/>;
@@ -35,7 +45,7 @@ class Routes extends Component {
     render() {
         return (
             <Main>
-                <LanguageToggle/>
+                <LanguageToggle />
                 <Switch>
                     <Route path="/maxline" render={this.countries} exact/>
                     <Route path="/maxline/codes" render={this.getListOfCodes} exact/>

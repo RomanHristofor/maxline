@@ -5,7 +5,7 @@ type Link = {
 }
 
 type Types = {
-    display: any
+    display?: string | number | object
 }
 
 const Wrap = styled.div`

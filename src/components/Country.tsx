@@ -18,12 +18,12 @@ type Props = {
 
 class Country extends Component<Props & LocalizeContextProps> {
 
-    componentDidUpdate(prevProps: any) {
+    componentDidUpdate(prevProps: Props) {
         const {activeLanguage, setActiveLanguage, addTranslationForLanguage} = this.props;
         const activeLang = getActiveLanguageInLocalStorage();
 
         addTranslationsForActiveLanguage(activeLanguage, addTranslationForLanguage);
-        if (activeLang && (prevProps.activeLanguage.code !== activeLang.code)) {
+        if (activeLang && (prevProps.activeLanguage && prevProps.activeLanguage.code !== activeLang.code)) {
             setActiveLanguage(activeLang.code);
             addTranslationsForActiveLanguage(activeLang, addTranslationForLanguage);
         }

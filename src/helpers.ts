@@ -1,5 +1,6 @@
-import {defaultFilters} from "./reducer/filters"
+import {defaultFilters} from './reducer/filters'
 import {LangInterface} from './reducer/languages'
+import {SingleLanguageTranslation} from 'react-localize-redux'
 import {CountryType, ResponseType} from './reducer/countries'
 
 export type Request = {
@@ -47,7 +48,7 @@ export function setRequestInLocalStorage(entities: CountryType[], type: string, 
 
 export function setInitialRequest(type: string, response: boolean) {
     const q = defaultFilters.countryName.toLowerCase();
-    let request = {q:'',type:'',response: false};
+    let request = {q: '', type: '', response: false};
     if (q && type && response) {
         request.q = q;
         request.type = type;
@@ -100,7 +101,7 @@ export function removeItemInLocalStorage(type: string) {
 }
 
 
-export function addTranslationsForActiveLanguage(lang: LangInterface, fn: any) {
+export function addTranslationsForActiveLanguage(lang: LangInterface, fn: (t: SingleLanguageTranslation, l: string) => void) {
     if (!lang) return;
 
     import(`./components/translations/${lang.code}.country.json`)

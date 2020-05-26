@@ -16,9 +16,7 @@ export type StateCountryInterface = typeof reducerState;
 
 export type CountryType = {
     id?: string
-    type?: string
-    dispatch?: (s: string) => void
-    isChecked?: 'shortName' | string
+    isChecked: 'shortName' | string
     name?: string
     capital?: string
     flag?: string
@@ -59,7 +57,9 @@ export const reducerState = {
     loaded: false,
     error: '',
     country: {
-        isChecked: 'shortName'
+        type: '',
+        isChecked: 'shortName',
+        dispatch: {}
     },
     countries: []
 }

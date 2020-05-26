@@ -1,66 +1,62 @@
-import React, {Component} from 'react';
-import {connect} from "react-redux";
+import React from 'react';
+import {useDispatch} from 'react-redux';
 import {changeLanguageStorage} from '../../AC';
-import { getActiveLanguageInLocalStorage } from '../../helpers';
+import {getActiveLanguageInLocalStorage} from '../../helpers';
 import {withLocalize, LocalizeContextProps} from 'react-localize-redux';
 import {LangInterface} from '../../reducer/languages';
 import {LanguageWrap} from '../css';
 
 
 type Props = {
-    languages: LangInterface[],
-    activeLanguage?: LangInterface,
-    setActiveLanguage?: (c: string) => void,
-    changeLanguageStorage?: (l: LangInterface) => void,
-}
+    languages: LangInterface[]
+    activeLanguage?: LangInterface
+    setActiveLanguage?: (c: string) => void
+} & LocalizeContextProps
 
-class LanguageToggle extends Component<Props & LocalizeContextProps> {
+const LanguageToggle = ({
+                            languages,
+                            activeLanguage,
+                            setActiveLanguage
+                        }: Props) => {
+    const dispatch = useDispatch();
 
-    getClass = (languageCode: string) => {
+    const getClass = (languageCode: string) => {
         const activeLang = getActiveLanguageInLocalStorage();
 
         if (activeLang)
             return languageCode === activeLang.code ? 'active' : '';
 
-        return languageCode === this.props.activeLanguage.code ? 'active' : '';
+        return languageCode === activeLanguage.code ? 'active' : '';
     };
 
-    handlerSetLang = (lang: LangInterface) => {
+    const handlerSetLang = (lang: LangInterface) => {
         const activeLang = getActiveLanguageInLocalStorage();
 
         if (activeLang && activeLang.code !== lang.code)
-            this.setActiveLangInStorage(lang);
+            setActiveLangInStorage(lang);
         if (!activeLang)
-            this.setActiveLangInStorage(lang);
+            setActiveLangInStorage(lang);
     };
 
-    setActiveLangInStorage = (lang: LangInterface) => {
-        const {setActiveLanguage, changeLanguageStorage} = this.props;
-
+    const setActiveLangInStorage = (lang: LangInterface) => {
         setActiveLanguage(lang.code);
         const storageLang = {...lang, active: true};
-        if (changeLanguageStorage)
-            changeLanguageStorage(storageLang);
+        dispatch(changeLanguageStorage(storageLang));
     };
 
-    render() {
-        const {languages} = this.props;
-
-        return (
-            <LanguageWrap>
-                {languages.map(lang =>
-                    <div key={lang.code}>
-                        <button className={`btn btn-outline-info ${this.getClass(lang.code)}`}
-                                onClick={() => this.handlerSetLang(lang)}>
-                            {lang.name}
-                        </button>
-                    </div>
-                )}
-            </LanguageWrap>
-        );
-    }
-}
+    return (
+        <LanguageWrap>
+            {languages.map(lang =>
+                <div key={lang.code}>
+                    <button className={`btn btn-outline-info ${getClass(lang.code)}`}
+                            onClick={() => handlerSetLang(lang)}>
+                        {lang.name}
+                    </button>
+                </div>
+            )}
+        </LanguageWrap>
+    );
+};
 
 
-export default connect(null,
-    {changeLanguageStorage})(withLocalize(LanguageToggle))
+export default withLocalize(LanguageToggle);

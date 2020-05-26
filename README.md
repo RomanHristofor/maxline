@@ -11,6 +11,7 @@ Implemented a React App that displays a list of countries.
 Tools:
 
 - create-react-app
+- hooks
 - typescript
 - redux
 - react-localize-redux

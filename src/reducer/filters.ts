@@ -12,12 +12,13 @@ export const defaultFilters = {
 };
 export type StateFiltersInterface = typeof defaultFilters;
 
+export type PaginationType = {
+    page: number
+    pageSize: number
+}
 export type ActionType = {
     type: string
-    payload: {
-        value: string
-        page: number
-    } & string
+    payload: string
 }
 
 export default (state = defaultFilters, action: ActionType) => {

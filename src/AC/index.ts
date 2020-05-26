@@ -10,7 +10,7 @@ import {
     HOST,
     GET_ENTITIES_IN_STORAGE
 } from '../constants'
-import {ActionType} from '../reducer/filters'
+import {PaginationType} from '../reducer/filters'
 import {LangInterface} from '../reducer/languages'
 import {CountryType} from '../reducer/countries'
 
@@ -53,7 +53,7 @@ export function inputFiltratedByName(value: string) {
     }
 }
 
-export function changePages(payload: ActionType) {
+export function changePages(payload: PaginationType) {
     return {
         type: CHANGE_PAGES,
         payload

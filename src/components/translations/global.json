@@ -28,12 +28,8 @@
     "полному названию страны"
   ],
   "codeCountry": [
-    "code(s) country ",
-    "код(ы) страны "
-  ],
-  "exampleCode": [
-    "for several countries: code1;code2;",
-    "для нескольких стран: code1;code2;"
+    "code(s) country",
+    "код(ы) страны"
   ],
   "currencyCountry": [
     "currency country",

@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
-import {Route, Switch, RouteComponentProps} from 'react-router-dom'
+import React, {useEffect} from 'react'
+import {useRoutes, HookRouter} from "hookrouter"
 import LanguageToggle from './common/LanguageToggle'
-import { withLocalize, LocalizeContextProps } from 'react-localize-redux'
+import {withLocalize, LocalizeContextProps} from 'react-localize-redux'
 import CountryCodeList from './Filters/CountryCode'
 import {getLocalStorage} from '../helpers'
 import {reducerState, LanguagesInterface} from '../reducer/languages'
@@ -10,50 +10,35 @@ import Countries from './Countries'
 import {Main} from './css'
 
 
-interface RouterProps {
-    id: string
-}
-
 type Props = {
     reducerState: LanguagesInterface
-}
+} & LocalizeContextProps
 
-class Routes extends Component<Props & LocalizeContextProps> {
-    constructor(props: any) {
-        super(props);
-        const activeStorageLang = getLocalStorage('lang');
-        localStorage.removeItem('request');
+const Routes = (props: Props) => {
+    const activeStorageLang = getLocalStorage('lang');
+    localStorage.removeItem('request');
 
+    useEffect(() => {
         if (activeStorageLang.length) {
             reducerState.languages = activeStorageLang;
-            this.props.initialize(reducerState);
+            props.initialize(reducerState);
         } else {
-            this.props.initialize(reducerState);
+            props.initialize(reducerState);
         }
-    }
+    }, []);
 
-    getIndex = ({match}: RouteComponentProps<RouterProps>) => {
-        const {id} = match.params;
-        return <Country
-            id={id} key={id}
-        />
+    const routes = {
+        '/maxline': () => <Countries/>,
+        '/maxline/codes': () => <CountryCodeList/>,
+        '/maxline/:id': ({id}: HookRouter.QueryParams) => <Country id={id} key={id}/>
     };
 
-    countries = () => <Countries/>;
-    getListOfCodes = () => <CountryCodeList/>;
-
-    render() {
-        return (
-            <Main>
-                <LanguageToggle />
-                <Switch>
-                    <Route path="/maxline" render={this.countries} exact/>
-                    <Route path="/maxline/codes" render={this.getListOfCodes} exact/>
-                    <Route path="/maxline/:id" render={this.getIndex}/>
-                </Switch>
-            </Main>
-        )
-    }
-}
+    return (
+        <Main>
+            <LanguageToggle/>
+            {useRoutes(routes)}
+        </Main>
+    )
+};
 
 export default withLocalize(Routes);

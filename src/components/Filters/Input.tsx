@@ -40,7 +40,7 @@ const Input = () => {
         dispatch(inputFiltratedByName(str));
     };
 
-    const handleFilter = (key: string) => {
+    const handleFilter = (key: string) => () => {
         let action;
         switch (key) {
             case 'fullName':
@@ -70,28 +70,19 @@ const Input = () => {
                 <Translate id="inputCountryLabel"/>
             </InputLabel>
             <RadioGroup>
-                <label className="radio-inline"
-                       onClick={() => handleFilter('shortName')}
-                >
+                <label className="radio-inline" onClick={handleFilter("shortName")}>
                     <input type="radio" name="optradio" defaultChecked={country.isChecked === 'shortName'}/>
                     <Translate id="shortCountryName"/>
                 </label>
-                <label className="radio-inline"
-                       onClick={() => handleFilter('fullName')}
-                >
+                <label className="radio-inline" onClick={handleFilter("fullName")}>
                     <input type="radio" name="optradio" defaultChecked={country.isChecked === 'fullName'}/>
                     <Translate id="fullCountryName"/>
                 </label>
-                <label className="radio-inline"
-                       onClick={() => handleFilter('code')}
-                >
+                <label className="radio-inline" onClick={handleFilter("code")}>
                     <input type="radio" name="optradio" defaultChecked={country.isChecked === 'code'}/>
                     <Translate id="codeCountry"/>
-                    <code><Translate id="exampleCode"/></code>
                 </label>
-                <label className="radio-inline"
-                       onClick={() => handleFilter('currency')}
-                >
+                <label className="radio-inline" onClick={handleFilter("currency")}>
                     <input type="radio" name="optradio" defaultChecked={country.isChecked === 'currency'}/>
                     <Translate id="currencyCountry"/>
                 </label>
